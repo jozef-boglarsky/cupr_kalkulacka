@@ -829,7 +829,7 @@ function calcUPD(){
   const knm=(T4m[i4]+c2_4)*K, knx=(T4x[i4]+c2_4)*K;
 
   // GIS — nová štruktúra
-  const KG={gis:.8,cad:1.0,analog:1.2,papier:1.4}[pod];
+  const KG={gis:.8,cad:1.0,analog:1.35,papier:1.5}[pod];
   const jv={low:15,mid:25,high:40}[roz];
 
   // G1 fix
@@ -839,9 +839,10 @@ function calcUPD(){
   const G2bm=pod==='cad'?(800+ha*6):0;
   const G2bx=pod==='cad'?(1200+ha*10):0;
 
-  // G3a vektorizácia (len pri analóg/papier)
-  const G3am=(pod==='analog'||pod==='papier')?ha*12*KG:0;
-  const G3ax=(pod==='analog'||pod==='papier')?ha*20*KG:0;
+  // G3a vektorizácia (len pri analóg/papier) — fixný príplatok + ha sadzba
+  const G3a_fix=500;
+  const G3am=(pod==='analog'||pod==='papier')?(G3a_fix+ha*22*KG):0;
+  const G3ax=(pod==='analog'||pod==='papier')?(G3a_fix+ha*32*KG):0;
 
   // G3b symbolika — naviazaná na rozsah regulačného výkresu
   const G3bm=jv*18*KG, G3bx=jv*25*KG;
