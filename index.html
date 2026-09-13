@@ -457,9 +457,10 @@ input[type="range"]::-moz-range-thumb {
           <select id="mierka" onchange="calcUPD()">
             <option value="1.4">1 : 500</option>
             <option value="1.3">1 : 1 000</option>
-            <option value="1.0" selected>1 : 2 000 (1 : 2 880)</option>
-            <option value="0.8">1 : 5 000</option>
+            <option value="1.0">1 : 2 000 (1 : 2 880)</option>
+            <option value="0.8" selected>1 : 5 000</option>
           </select>
+          <div style="font-size:11px;color:var(--dim);margin-top:5px;">1 : 5 000 je základná mierka pre nové územné plány podľa § 40 zákona č. 200/2022 Z. z.</div>
         </div>
 
         <div class="toggle-row">
@@ -471,7 +472,7 @@ input[type="range"]::-moz-range-thumb {
         </div>
 
         <div class="field">
-          <div class="field-label">Rozsah zastavaného územia</div>
+          <div class="field-label">Rozsah zastavaného územia v intraviláne</div>
           <select id="zastav" onchange="calcUPD()">
             <option value="1.0" selected>do 20 %</option>
             <option value="1.2">do 50 %</option>
@@ -642,13 +643,7 @@ input[type="range"]::-moz-range-thumb {
             <option value="300">Viac ako 200</option>
           </select>
         </div>
-        <div class="toggle-row">
-          <span class="toggle-lbl">Posudzovanie vplyvov SEA / EIA</span>
-          <div class="t-wrap">
-            <button class="t-opt"    id="sea-ano" onclick="setT('sea','ano');calcOSO()">Áno</button>
-            <button class="t-opt on" id="sea-nie" onclick="setT('sea','nie');calcOSO()">Nie</button>
-          </div>
-        </div>
+
       </div>
 
       <div class="input-group">
@@ -664,33 +659,14 @@ input[type="range"]::-moz-range-thumb {
           <div class="slider-bounds"><span>30 €/h</span><span>100 €/h</span></div>
         </div>
         <div class="field">
-          <div class="field-label">Pracovné cesty</div>
-          <select id="cesty" onchange="calcOSO()">
-            <option value="0">Bez cestovného</option>
-            <option value="2">2 cesty</option>
-            <option value="4" selected>4 cesty</option>
-            <option value="8">8 ciest</option>
-            <option value="12">12 ciest</option>
+          <div class="field-label">Osobná konzultácia mimo rozsahu</div>
+          <select id="konzult" onchange="calcOSO()">
+            <option value="0" selected>Nie — digitálna komunikácia</option>
+            <option value="1">1× osobná konzultácia (800 €)</option>
+            <option value="2">2× osobná konzultácia (1 600 €)</option>
+            <option value="3">3× osobná konzultácia (2 400 €)</option>
           </select>
-        </div>
-        <div class="field">
-          <div class="field-label">Vzdialenosť (km / cesta)</div>
-          <select id="km" onchange="calcOSO()">
-            <option value="20">do 20 km</option>
-            <option value="50" selected>20 – 80 km</option>
-            <option value="120">80 – 160 km</option>
-            <option value="250">nad 160 km</option>
-          </select>
-        </div>
-        <div class="field">
-          <div class="field-label">Rezerva</div>
-          <div class="slider-row">
-            <input type="range" id="rz-s" min="0" max="25" step="1" value="5"
-              oninput="ssi('rz-s','rz-i');calcOSO()">
-            <input type="text"  class="num-input" id="rz-i" value="5"
-              onchange="sis('rz-i','rz-s',0,25);calcOSO()">
-          </div>
-          <div class="slider-bounds"><span>0 %</span><span>25 %</span></div>
+          <div style="font-size:11px;color:var(--dim);margin-top:5px;">Uprednostňujeme digitálnu komunikáciu. Osobná konzultácia je spoplatnená paušálne.</div>
         </div>
       </div>
     </div>
@@ -704,8 +680,8 @@ input[type="range"]::-moz-range-thumb {
         </div>
         <div class="res-rows">
           <div class="res-row"><span class="rl">Cena práce</span><span class="rv" id="o-pr">—</span></div>
-          <div class="res-row"><span class="rl">Cestovné</span><span class="rv"    id="o-ce">—</span></div>
-          <div class="res-row"><span class="rl">Rezerva</span><span class="rv"     id="o-rz">—</span></div>
+          <div class="res-row"><span class="rl">Osobná konzultácia</span><span class="rv" id="o-ce">—</span></div>
+          <div class="res-row" style="display:none"><span class="rl">Rezerva</span><span class="rv" id="o-rz">—</span></div>
           <div class="res-row tot"><span class="rl">Celková odmena</span><span class="rv" id="o-to">—</span></div>
         </div>
         <div class="etapa-row">
@@ -812,7 +788,7 @@ function calcUPD(){
   const pn=Math.round(pop*.28), vyhl=Math.round(pop*(hasUPN?1.05:1.08));
   const i3=mi(pop,T3o); const c2=pop*T3s[i3]; const c3=T3p[mi(pn,T3po)];
   let prm=(T3m[i3]+c2+c3)*K, prx=(T3x[i3]+c2+c3)*K;
-  if(!hasUPN){prm*=1.15;prx*=1.15;}
+  if(!hasUPN){prm*=1.8;prx*=1.8;knm*=1.8;knx*=1.8;}
   const i4=mi(vyhl,T4o); const c2_4=vyhl*T4s[i4];
   const knm=(T4m[i4]+c2_4)*K, knx=(T4x[i4]+c2_4)*K;
 
@@ -874,29 +850,33 @@ function calcOSO(){
   const pt=n(document.getElementById('pt-s').value);
   const pr=n(document.getElementById('pr-s').value);
   const prip=+document.getElementById('prip').value;
-  const sea=T.sea==='ano';
   const sadz=n(document.getElementById('sz-s').value);
-  const cesty=+document.getElementById('cesty').value;
-  const km=+document.getElementById('km').value;
-  const rez=(n(document.getElementById('rz-s').value))/100;
+  const konzult=+document.getElementById('konzult').value; // osobná konzultácia
   const kV=pop<1000?.88:pop<5000?1.0:pop<20000?1.1:1.2;
   const kT=kN*kK*kV;
+  // Etapa 1: cieľ ~10 000 € pri strednej náročnosti (kT=1.0, sadz=55 €/h)
+  // → 182h base pre ÚPN-O
   const bm={
-    upn:{init:8,zad:14,dob:12,siete:6,prer:12,evid:14,konz:14,sea:20,pod:12,fin:6},
-    zad:{init:4,zad:6, dob:6, siete:3,prer:6, evid:6, konz:6, sea:10,pod:6, fin:3},
-    zona:{init:5,zad:8,dob:8, siete:4,prer:8, evid:8, konz:8, sea:12,pod:8, fin:4},
-    podklad:{init:3,zad:5,dob:4,siete:2,prer:4,evid:4,konz:6,sea:0,pod:4,fin:2},
+    upn:    {init:90, zad:92,  dob:12,siete:6, prer:12,evid:14,konz:14,pod:12,fin:6},
+    zad:    {init:45, zad:46,  dob:6, siete:3, prer:6, evid:6, konz:6, pod:6, fin:3},
+    zona:   {init:55, zad:55,  dob:8, siete:4, prer:8, evid:8, konz:8, pod:8, fin:4},
+    podklad:{init:36, zad:37,  dob:4, siete:2, prer:4, evid:4, konz:6, pod:4, fin:2},
   }[typ];
   const vD=Math.max(0,doN-10)*.4, vP=pt*.3, vPr=pr*3.5, vPrip=prip*.18, vKU=Math.max(0,ku-1)*2;
-  const e1H=(bm.init+bm.zad+vKU+(sea?bm.sea:0))*kT;
+  const e1H=(bm.init+bm.zad+vKU)*kT;
   const e2H=(bm.dob+vD+bm.siete+vP+bm.prer+vPr+bm.evid+vPrip+bm.konz+bm.pod+bm.fin)*kT*kK;
   const totH=e1H+e2H;
-  const cp=totH*sadz, ce=cesty*km*.45, ms=cp+ce, rv=ms*rez, tot=ms+rv;
+  const konzCena=konzult*800; // 800 € / osobná konzultácia mimo rozsahu
+  const cp=totH*sadz;
+  const tot=cp+konzCena;
   animTo('oso-tot',tot);
   document.getElementById('oso-h').textContent='';
-  fill('o-pr',cp); fill('o-ce',ce); fill('o-rz',rv); fill('o-to',tot);
+  fill('o-pr',cp);
+  document.getElementById('o-ce').textContent=konzult>0?f(konzCena)+' €':'—';
+  document.getElementById('o-rz').textContent='—';
+  fill('o-to',tot);
   document.getElementById('ep1').textContent='Etapa 1 (dotačná): '+f(e1H*sadz)+' €';
-  document.getElementById('ep2').textContent='Etapa 2: '+f(e2H*sadz+ce+rv)+' €';
+  document.getElementById('ep2').textContent='Etapa 2: '+f(e2H*sadz+konzCena)+' €';
 }
 
 function switchTab(tab,btn){
@@ -981,11 +961,10 @@ function generateQuote() {
       ['Správcovia sietí', document.getElementById('pt-s').value],
       ['Kolá prerokovania', document.getElementById('pr-s').value],
       ['Pripomienky', getParam('prip')],
-      ['SEA / EIA', T.sea==='ano'?'Áno':'Nie'],
     ];
+    const konzN=+document.getElementById('konzult').value;
     rows=`<tr><td>Cena práce</td><td>${document.getElementById('o-pr').textContent}</td></tr>
-          <tr><td>Cestovné náhrady</td><td>${document.getElementById('o-ce').textContent}</td></tr>
-          <tr><td>Rezerva</td><td>${document.getElementById('o-rz').textContent}</td></tr>`;
+          ${konzN>0?`<tr><td>Osobná konzultácia mimo rozsahu (${konzN}×)</td><td>${document.getElementById('o-ce').textContent}</td></tr>`:``}`;
     totalRow=`<tr class="tot-row"><td><strong>Celková odmena OSO</strong></td><td><strong>${document.getElementById('o-to').textContent}</strong></td></tr>`;
     subject=`Výkon OSO – ${getParam('oso-typ')} – obec ${obec}`;
   }
@@ -1044,6 +1023,7 @@ function generateQuote() {
       <table><tr><th>Parameter</th><th>Hodnota</th></tr>${paramRows}</table>
       <div class="sec-title">Cenová kalkulácia</div>
       <table><tr><th>Položka</th><th>Cena (min – max, bez DPH)</th></tr>${rows}${totalRow}</table>
+      ${!hasUPN?`<div class="note" style="background:#FFF3E0;border-color:#FFCC80;"><strong>Poznámka k cenám:</strong> Obec nemá platný územný plán. Cena zohľadňuje rozšírený rozsah prác (prieskumy a rozbory od základu). Finálna ponuka bude zaslaná po konzultácii.</div>`:''}
       <div class="note"><strong>Poznámka:</strong> Uvedené ceny sú orientačné. Konečná cena bude stanovená po konzultácii a analýze dokumentácie. Platnosť ponuky: 30 dní. Ceny sú bez DPH.</div>
       <div class="footer"><span>${ref} · CUPR · cupr.sk</span><span>Generované ${dateStr}</span></div>
     </div>
