@@ -769,7 +769,6 @@ function calcUPD(){
   const hasUPN=T.upn==='ano';
   const pod=document.getElementById('podklady').value;
   const ha=n(document.getElementById('ha-s').value);
-  const roz=document.getElementById('rozsah').value;
   const kN=+document.getElementById('narocnost-upd').value;
   const K=K1*K2*K3;
 
@@ -954,7 +953,7 @@ function generateQuote() {
       ['Zastavanosť intravilánu', getParam('zastav')],
       ['Typ vstupných podkladov', getParam('podklady')],
       ['Rozloha intravilánu', n(document.getElementById('ha-s').value)+' ha'],
-      ['Rozsah regulačného výkresu', getParam('rozsah').split('—')[0].trim()],
+      ['Počet PFČ', n(document.getElementById('pfc-s').value)+' PFČ'],
       ['Náročnosť územia', getParam('narocnost-upd').split('—')[0].trim()],
     ];
     rows=`<tr><td>Prieskumy a rozbory</td><td>${document.getElementById('r-pr').textContent}</td></tr>
