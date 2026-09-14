@@ -429,12 +429,12 @@ input[type="range"]::-moz-range-thumb {
         <div class="field">
           <div class="field-label">Počet obyvateľov</div>
           <div class="slider-row">
-            <input type="range" id="pop-s" min="100" max="20000" step="50" value="2500"
+            <input type="range" id="pop-s" min="100" max="100000" step="100" value="2500"
               oninput="ssi('pop-s','pop-i');calcUPD()">
             <input type="text"  class="num-input" id="pop-i" value="2 500"
-              onchange="sis('pop-i','pop-s',100,20000);calcUPD()">
+              onchange="sis('pop-i','pop-s',100,100000);calcUPD()">
           </div>
-          <div class="slider-bounds"><span>100</span><span>20 000</span></div>
+          <div class="slider-bounds"><span>100</span><span>100 000</span></div>
         </div>
 
         <div class="field">
@@ -508,12 +508,12 @@ input[type="range"]::-moz-range-thumb {
         <div class="field">
           <div class="field-label">Počet priestorovo-funkčných častí (PFČ)</div>
           <div class="slider-row">
-            <input type="range" id="pfc-s" min="1" max="700" step="1" value="50"
+            <input type="range" id="pfc-s" min="1" max="500" step="1" value="50"
               oninput="ssi('pfc-s','pfc-i');calcUPD()">
             <input type="text" class="num-input" id="pfc-i" value="50"
-              onchange="sis('pfc-i','pfc-s',1,700);calcUPD()">
+              onchange="sis('pfc-i','pfc-s',1,500);calcUPD()">
           </div>
-          <div class="slider-bounds"><span>1 PFČ</span><span>700 PFČ</span></div>
+          <div class="slider-bounds"><span>1 PFČ</span><span>500 PFČ</span></div>
         </div>
 
         <div class="field">
@@ -577,7 +577,7 @@ input[type="range"]::-moz-range-thumb {
             <input type="text"  class="num-input" id="op-i" value="2 500"
               onchange="sis('op-i','op-s',100,100000);calcOSO()">
           </div>
-          <div class="slider-bounds"><span>100</span><span>20 000</span></div>
+          <div class="slider-bounds"><span>100</span><span>100 000</span></div>
         </div>
         <div class="field">
           <div class="field-label">Katastrálne územia</div>
