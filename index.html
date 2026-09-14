@@ -508,12 +508,12 @@ input[type="range"]::-moz-range-thumb {
         <div class="field">
           <div class="field-label">Počet priestorovo-funkčných častí (PFČ)</div>
           <div class="slider-row">
-            <input type="range" id="pfc-s" min="1" max="1000" step="1" value="50"
+            <input type="range" id="pfc-s" min="1" max="700" step="1" value="50"
               oninput="ssi('pfc-s','pfc-i');calcUPD()">
             <input type="text" class="num-input" id="pfc-i" value="50"
-              onchange="sis('pfc-i','pfc-s',1,1000);calcUPD()">
+              onchange="sis('pfc-i','pfc-s',1,700);calcUPD()">
           </div>
-          <div class="slider-bounds"><span>1 PFČ</span><span>1 000 PFČ</span></div>
+          <div class="slider-bounds"><span>1 PFČ</span><span>700 PFČ</span></div>
         </div>
 
         <div class="field">
@@ -800,8 +800,8 @@ function calcUPD(){
   const G3ax=(pod==='analog'||pod==='papier')?(G3a_fix+ha*32*KG):0;
 
   // G3b symbolika — odmocninový model per PFČ
-  const G3bm=Math.round(165*Math.sqrt(pfc)*KG);
-  const G3bx=Math.round(230*Math.sqrt(pfc)*KG);
+  const G3bm=Math.round(70*Math.sqrt(pfc)*KG);
+  const G3bx=Math.round(100*Math.sqrt(pfc)*KG);
 
   // G4 analýzy — len nad 5000 ob.
   const G4m=pop>5000?ha*9:0, G4x=pop>5000?ha*13:0;
