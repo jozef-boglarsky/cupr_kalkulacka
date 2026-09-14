@@ -506,12 +506,14 @@ input[type="range"]::-moz-range-thumb {
         </div>
 
         <div class="field">
-          <div class="field-label">Rozsah regulačného výkresu</div>
-          <select id="rozsah" onchange="calcUPD()">
-            <option value="low">Jednoduchý — vidiecky charakter, menej funkčných zón</option>
-            <option value="mid" selected>Štandardný — typická obec / malé mesto</option>
-            <option value="high">Rozsiahly — mestský charakter, veľa funkčných zón</option>
-          </select>
+          <div class="field-label">Počet priestorovo-funkčných častí (PFČ)</div>
+          <div class="slider-row">
+            <input type="range" id="pfc-s" min="1" max="1000" step="1" value="50"
+              oninput="ssi('pfc-s','pfc-i');calcUPD()">
+            <input type="text" class="num-input" id="pfc-i" value="50"
+              onchange="sis('pfc-i','pfc-s',1,1000);calcUPD()">
+          </div>
+          <div class="slider-bounds"><span>1 PFČ</span><span>1 000 PFČ</span></div>
         </div>
 
         <div class="field">
@@ -570,10 +572,10 @@ input[type="range"]::-moz-range-thumb {
         <div class="field">
           <div class="field-label">Počet obyvateľov</div>
           <div class="slider-row">
-            <input type="range" id="op-s" min="100" max="20000" step="50" value="2500"
+            <input type="range" id="op-s" min="100" max="100000" step="100" value="2500"
               oninput="ssi('op-s','op-i');calcOSO()">
             <input type="text"  class="num-input" id="op-i" value="2 500"
-              onchange="sis('op-i','op-s',100,20000);calcOSO()">
+              onchange="sis('op-i','op-s',100,100000);calcOSO()">
           </div>
           <div class="slider-bounds"><span>100</span><span>20 000</span></div>
         </div>
@@ -784,7 +786,7 @@ function calcUPD(){
 
   // GIS — nová štruktúra
   const KG={gis:.8,cad:1.0,analog:1.35,papier:1.5}[pod];
-  const jv={low:15,mid:25,high:40}[roz];
+  const pfc=n(document.getElementById('pfc-s').value)||50;
 
   // G1 fix
   const G1m=800, G1x=1200;
@@ -798,8 +800,9 @@ function calcUPD(){
   const G3am=(pod==='analog'||pod==='papier')?(G3a_fix+ha*22*KG):0;
   const G3ax=(pod==='analog'||pod==='papier')?(G3a_fix+ha*32*KG):0;
 
-  // G3b symbolika — naviazaná na rozsah regulačného výkresu
-  const G3bm=jv*18*KG, G3bx=jv*25*KG;
+  // G3b symbolika — odmocninový model per PFČ
+  const G3bm=Math.round(165*Math.sqrt(pfc)*KG);
+  const G3bx=Math.round(230*Math.sqrt(pfc)*KG);
 
   // G4 analýzy — len nad 5000 ob.
   const G4m=pop>5000?ha*9:0, G4x=pop>5000?ha*13:0;
@@ -1032,21 +1035,17 @@ function generateQuote() {
       <table><tr><th>Parameter</th><th>Hodnota</th></tr>${paramRows}</table>
       <div class="sec-title">Cenová kalkulácia</div>
       <table><tr><th>Položka</th><th>Cena (min – max, bez DPH)</th></tr>${rows}${totalRow}</table>
-      ${!hasUPN?`<div class="note" style="background:#FFF3E0;border-color:#FFCC80;"><strong>Poznámka k cenám:</strong> Obec nemá platný územný plán. Cena zohľadňuje rozšírený rozsah prác (prieskumy a rozbory od základu). Finálna ponuka bude zaslaná po konzultácii.</div>`:''}
+      ${T.upn!=='ano'?`<div class="note" style="background:#FFF3E0;border-color:#FFCC80;"><strong>Poznámka k cenám:</strong> Obec nemá platný územný plán. Cena zohľadňuje rozšírený rozsah prác (prieskumy a rozbory od základu). Finálna ponuka bude zaslaná po konzultácii.</div>`:''}
       <div class="note"><strong>Poznámka:</strong> Uvedené ceny sú orientačné. Konečná cena bude stanovená po konzultácii a analýze dokumentácie. Platnosť ponuky: 30 dní. Ceny sú bez DPH.</div>
       <div class="footer"><span>${ref} · CUPR · cupr.sk</span><span>Generované ${dateStr}</span></div>
     </div>
   `;
 
-  const win = window.open('', '_blank');
-  win.document.write(`<!DOCTYPE html><html lang="sk"><head>
-<meta charset="UTF-8">
-<title>Cenová ponuka ${ref} — CUPR</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
-<style>${qCSS}</style>
-</head><body>${qHTML}</body></html>`);
-  win.document.close();
+  const overlay = document.getElementById('quote-overlay');
+  const body = document.getElementById('quote-body');
+  body.innerHTML = `<style>${qCSS}</style>${qHTML}`;
+  overlay.style.display = 'block';
+  overlay.scrollTop = 0;
 }
 
 </script>
