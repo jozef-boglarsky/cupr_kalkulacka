@@ -630,7 +630,13 @@ input[type="range"]::-moz-range-thumb {
             <option value="300">Viac ako 200</option>
           </select>
         </div>
-
+        <div class="field">
+          <div class="field-label">Koordinačná náročnosť</div>
+          <select id="oso-koor" onchange="calcOSO()">
+            <option value="1.0" selected>Štandard</option>
+            <option value="1.15">Zvýšená</option>
+          </select>
+        </div>
       </div>
 
       <div class="input-group">
@@ -766,7 +772,7 @@ function calcUPD(){
   const K=K1*K2*K3;
 
   // UPD Tab_3 + Tab_4
-  const pn=Math.round(pop*.28), vyhl=Math.round(pop*(hasUPN?1.05:1.08));
+  const pn=Math.round(pop*.28), vyhl=Math.round(pop*1.05);
   const i3=mi(pop,T3o); const c2=pop*T3s[i3]; const c3=T3p[mi(pn,T3po)];
   let prm=(T3m[i3]+c2+c3)*K, prx=(T3x[i3]+c2+c3)*K;
   const i4=mi(vyhl,T4o); const c2_4=vyhl*T4s[i4];
@@ -839,7 +845,7 @@ function calcOSO(){
   const sadz = n(document.getElementById('sz-s').value);
   const konzult = +document.getElementById('konzult').value;
 
-  const kV = pop<1000?.88:pop<5000?1.0:pop<20000?1.1:1.2;
+  const kV = Math.min(1.22, 0.84 + (Math.min(pop,20000)/20000)*0.46); // plynulé škálovanie 0.84→1.22
   const kT = kN*kK*kV;
 
   // ── Etapa 1 (štruktúra podľa Excelu, škálovaná na ~10 000 € pri kT=1.0, 55 €/h) ──
